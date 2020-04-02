@@ -1,9 +1,22 @@
 var express = require('express');
 var router = express.Router();
-var ProductModel = require('./../models/product').ProductModel
 
-/* GET home page. */
+/**
+ * Get Products with Crawler
+ *
+ * @params :name String
+ * @params :limit Integer (optional)
+ */
 router.get('/products/:name/:limit?', function(req, res, next) {
+
+  res.setHeader('Content-Type', 'application/json');
+
+  if (!req.params.name) {
+    res.end(JSON.stringify({
+      Application: 'Mundiale Crawler API test',
+      Error: 'Please provide a name for the query'
+    }))
+  }
 
   var Crawler = require("crawler")
     products = [],
@@ -12,18 +25,7 @@ router.get('/products/:name/:limit?', function(req, res, next) {
     limit = req.params.limit || 10
 
   var c = new Crawler({
-    maxConnections: 10,
-    // This will be called for each crawled page
-    /*callback: function (error, res, done) {
-      if (error) {
-        console.log(error);
-      } else {
-        var $ = res.$;
-        // $ is Cheerio by default
-        //a lean implementation of core jQuery designed specifically for the server
-      }
-      done();
-    }*/
+    maxConnections: 10
   });
 
   // Queue URLs with custom callbacks & parameters
@@ -33,8 +35,6 @@ router.get('/products/:name/:limit?', function(req, res, next) {
 
     // The global callback won't be called
     callback: function (error, crawlerRes, done) {
-
-      res.setHeader('Content-Type', 'application/json');
 
       if (error) {
 
@@ -74,7 +74,7 @@ router.get('/products/:name/:limit?', function(req, res, next) {
         res.end(JSON.stringify({
           Application: 'Mundiale Crawler API test',
           CheapestProduct: cheapest? `R$ ${cheapest}` : '' || '',
-          Products: products || []
+          Products: products? products.slice(0,limit) : [] || []
         }))
 
       }
