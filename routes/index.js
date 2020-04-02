@@ -73,6 +73,8 @@ router.get('/products/:name/:limit?', function(req, res, next) {
 
         res.end(JSON.stringify({
           Application: 'Mundiale Crawler API test',
+          Search: req.params.name || '',
+          Limit: req.params.limit || '',
           CheapestProduct: cheapest? `R$ ${cheapest}` : '' || '',
           Products: products? products.slice(0,limit) : [] || []
         }))
