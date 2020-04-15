@@ -1,6 +1,6 @@
-# crawler-mundiale
+# nodejs-crawler
 
-Mundiale Crawler
+Nodejs Crawler
 
 test by Victor Souto <souto.victor@gmail.com
 
